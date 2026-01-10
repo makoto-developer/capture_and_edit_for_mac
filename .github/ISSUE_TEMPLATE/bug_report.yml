@@ -1,0 +1,58 @@
+name: バグレポート
+description: 予期しない動作や問題を報告する
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        バグレポートをありがとうございます。以下の項目を記入してください。
+
+  - type: textarea
+    id: description
+    attributes:
+      label: 問題の説明
+      description: 発生している問題を簡潔に説明してください
+      placeholder: 例：画像を保存すると、クリップボードに何もコピーされない
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: 再現手順
+      description: 問題を再現するための手順を教えてください
+      placeholder: |
+        1. アプリを起動
+        2. スクリーンショットをキャプチャ
+        3. 線を描画
+        4. 保存ボタンをクリック
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: 期待される動作
+      description: 本来はどのように動作すべきですか？
+      placeholder: 例：クリップボードに編集後の画像がコピーされる
+    validations:
+      required: true
+
+  - type: textarea
+    id: environment
+    attributes:
+      label: 環境
+      description: 使用している環境を教えてください
+      placeholder: |
+        - macOS バージョン: 14.0
+        - アプリバージョン: 1.0.0
+    validations:
+      required: false
+
+  - type: textarea
+    id: additional
+    attributes:
+      label: 追加情報
+      description: スクリーンショットやログなど、その他の情報があれば記入してください
+    validations:
+      required: false

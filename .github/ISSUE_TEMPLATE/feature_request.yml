@@ -1,0 +1,42 @@
+name: 機能リクエスト
+description: 新しい機能や改善を提案する
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        機能リクエストをありがとうございます。以下の項目を記入してください。
+
+  - type: textarea
+    id: description
+    attributes:
+      label: 機能の説明
+      description: 追加してほしい機能を簡潔に説明してください
+      placeholder: 例：画像に図形（円、三角形など）を描画したい
+    validations:
+      required: true
+
+  - type: textarea
+    id: motivation
+    attributes:
+      label: 動機
+      description: なぜこの機能が必要ですか？どのような場面で使用しますか？
+      placeholder: 例：特定の箇所を強調する際に、四角だけでなく円で囲みたい場合がある
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: 代替案
+      description: 他に検討した方法や回避策があれば教えてください
+    validations:
+      required: false
+
+  - type: textarea
+    id: additional
+    attributes:
+      label: 追加情報
+      description: その他、参考になる情報があれば記入してください
+    validations:
+      required: false

@@ -1,0 +1,34 @@
+name: 質問
+description: 使い方や技術的な質問をする
+labels: ["question"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        質問をありがとうございます。以下の項目を記入してください。
+
+  - type: textarea
+    id: question
+    attributes:
+      label: 質問内容
+      description: 質問を簡潔に記入してください
+      placeholder: 例：履歴の保存先を変更することは可能ですか？
+    validations:
+      required: true
+
+  - type: textarea
+    id: context
+    attributes:
+      label: 背景
+      description: 質問の背景や、試したことがあれば教えてください
+      placeholder: 例：デフォルトではホームディレクトリに保存されるが、別の場所にしたい
+    validations:
+      required: false
+
+  - type: textarea
+    id: additional
+    attributes:
+      label: 追加情報
+      description: その他、参考になる情報があれば記入してください
+    validations:
+      required: false

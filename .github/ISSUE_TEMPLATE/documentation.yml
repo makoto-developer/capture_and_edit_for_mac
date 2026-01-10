@@ -1,0 +1,43 @@
+name: ドキュメント改善
+description: ドキュメントの改善や追加を提案する
+labels: ["documentation"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ドキュメント改善の提案をありがとうございます。
+
+  - type: textarea
+    id: location
+    attributes:
+      label: 対象ドキュメント
+      description: 改善が必要なドキュメントを教えてください
+      placeholder: 例：README.md、インストール手順
+    validations:
+      required: true
+
+  - type: textarea
+    id: issue
+    attributes:
+      label: 問題点
+      description: ドキュメントのどこが不足または不明確ですか？
+      placeholder: 例：ビルド方法の説明が分かりにくい
+    validations:
+      required: true
+
+  - type: textarea
+    id: suggestion
+    attributes:
+      label: 改善案
+      description: どのように改善すればよいと思いますか？
+      placeholder: 例：手順を図解付きで説明する
+    validations:
+      required: false
+
+  - type: textarea
+    id: additional
+    attributes:
+      label: 追加情報
+      description: その他、参考になる情報があれば記入してください
+    validations:
+      required: false

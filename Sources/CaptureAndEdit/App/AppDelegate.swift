@@ -5,6 +5,7 @@ public final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegat
     public var window: NSWindow?
     private var viewModel: MainViewModel?
     private var statusItem: NSStatusItem?
+    private var aboutWindow: NSWindow?
 
     public func applicationDidFinishLaunching(_ notification: Notification) {
         // 🔑 重要: アプリを通常のフォアグラウンドアプリとして設定
@@ -77,6 +78,8 @@ public final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegat
 
         menu.addItem(NSMenuItem(title: "ウィンドウを表示", action: #selector(showWindow), keyEquivalent: ""))
         menu.addItem(NSMenuItem.separator())
+        menu.addItem(NSMenuItem(title: "このアプリについて", action: #selector(showAboutWindow), keyEquivalent: ""))
+        menu.addItem(NSMenuItem.separator())
         menu.addItem(NSMenuItem(title: "終了", action: #selector(quitApp), keyEquivalent: "q"))
 
         statusItem?.menu = menu
@@ -126,6 +129,33 @@ public final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegat
 
     private func setupMainMenu() {
         let mainMenu = NSMenu()
+
+        // アプリケーションメニューを作成
+        let appMenu = NSMenu()
+        let appMenuItem = NSMenuItem()
+        appMenuItem.submenu = appMenu
+
+        // このアプリについて
+        let aboutItem = NSMenuItem(
+            title: "Capture and Edit について",
+            action: #selector(showAboutWindow),
+            keyEquivalent: ""
+        )
+        aboutItem.target = self
+        appMenu.addItem(aboutItem)
+
+        appMenu.addItem(NSMenuItem.separator())
+
+        // 終了（Cmd+Q）
+        let quitItem = NSMenuItem(
+            title: "Capture and Edit を終了",
+            action: #selector(quitApp),
+            keyEquivalent: "q"
+        )
+        quitItem.target = self
+        appMenu.addItem(quitItem)
+
+        mainMenu.addItem(appMenuItem)
 
         // Fileメニューを作成
         let fileMenu = NSMenu(title: "File")
@@ -208,5 +238,42 @@ public final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegat
     @objc private func closeWindow() {
         print("🔒 Close Window triggered via Cmd+W")
         window?.orderOut(nil)
+    }
+
+    @objc private func showAboutWindow() {
+        print("ℹ️ Show About Window triggered")
+
+        // 既存のウィンドウがあれば再利用
+        if let existingWindow = aboutWindow {
+            existingWindow.orderFront(nil)
+            existingWindow.makeKeyAndOrderFront(nil)
+            NSApp.activate(ignoringOtherApps: true)
+            return
+        }
+
+        // 新しいAboutウィンドウを作成
+        let aboutView = AboutView()
+        let hostingView = NSHostingView(rootView: aboutView)
+
+        let window = NSWindow(
+            contentRect: NSRect(x: 0, y: 0, width: 450, height: 450),
+            styleMask: [.titled, .closable],
+            backing: .buffered,
+            defer: false
+        )
+
+        window.title = "Capture and Edit について"
+        window.contentView = hostingView
+        window.center()
+        window.isReleasedWhenClosed = false
+        window.level = .floating
+
+        aboutWindow = window
+
+        window.orderFront(nil)
+        window.makeKeyAndOrderFront(nil)
+        NSApp.activate(ignoringOtherApps: true)
+
+        print("✅ About Window displayed")
     }
 }

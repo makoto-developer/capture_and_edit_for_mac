@@ -1,0 +1,67 @@
+name: フィードバック
+description: アプリの使用感や改善点についてのフィードバック
+labels: ["feedback"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        フィードバックをお寄せいただき、ありがとうございます。
+        アプリの改善に役立てさせていただきます。
+
+  - type: dropdown
+    id: feedback-type
+    attributes:
+      label: フィードバックの種類
+      description: 該当するものを選択してください
+      options:
+        - 使いやすい点
+        - 使いにくい点
+        - 改善提案
+        - その他
+    validations:
+      required: true
+
+  - type: textarea
+    id: feedback-content
+    attributes:
+      label: フィードバック内容
+      description: 具体的な内容を記入してください
+      placeholder: |
+        例：
+        - 〇〇の機能が使いやすかった
+        - △△の操作が分かりにくかった
+        - ××のような機能があると便利
+    validations:
+      required: true
+
+  - type: textarea
+    id: context
+    attributes:
+      label: 利用状況
+      description: どのような状況で使用していますか？（任意）
+      placeholder: |
+        例：
+        - 仕事でドキュメント作成時に使用
+        - Claude Codeへの指示画像作成に利用
+        - デザインレビュー時の指摘箇所マーキング
+    validations:
+      required: false
+
+  - type: textarea
+    id: environment
+    attributes:
+      label: 環境情報
+      description: 使用環境を教えてください（任意）
+      placeholder: |
+        - macOSバージョン：macOS 14.0
+        - アプリバージョン：1.0.0
+    validations:
+      required: false
+
+  - type: textarea
+    id: additional
+    attributes:
+      label: その他
+      description: その他、お気づきの点があれば自由に記入してください
+    validations:
+      required: false

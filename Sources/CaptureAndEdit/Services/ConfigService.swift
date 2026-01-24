@@ -77,6 +77,20 @@ final class ConfigService: ObservableObject {
         newConfig.autoCloseAfterSave = enabled
         updateConfig(newConfig)
     }
+
+    /// カスタムカラーを追加する
+    func addCustomColor(_ color: CustomColor) {
+        var newConfig = config
+        newConfig.customColors.append(color)
+        updateConfig(newConfig)
+    }
+
+    /// カスタムカラーを削除する
+    func removeCustomColor(_ color: CustomColor) {
+        var newConfig = config
+        newConfig.customColors.removeAll { $0.id == color.id }
+        updateConfig(newConfig)
+    }
     
     // MARK: - Private Methods
     
@@ -104,29 +118,30 @@ final class ConfigService: ObservableObject {
         var historyDirectory = AppConfig.defaultHistoryDirectory
         var historyDisplayCount = 25
         var autoCloseAfterSave = true
-        
+        var customColors: [CustomColor] = []
+
         let lines = content.components(separatedBy: .newlines)
-        
+
         for line in lines {
             let trimmed = line.trimmingCharacters(in: .whitespaces)
-            
+
             // コメントや空行をスキップ
             if trimmed.isEmpty || trimmed.hasPrefix("#") {
                 continue
             }
-            
+
             // キー=値の形式をパース
             let parts = trimmed.split(separator: "=", maxSplits: 1)
             guard parts.count == 2 else { continue }
-            
+
             let key = String(parts[0]).trimmingCharacters(in: .whitespaces)
             var value = String(parts[1]).trimmingCharacters(in: .whitespaces)
-            
+
             // 文字列の引用符を削除
             if value.hasPrefix("\"") && value.hasSuffix("\"") {
                 value = String(value.dropFirst().dropLast())
             }
-            
+
             switch key {
             case "history_directory":
                 historyDirectory = value.isEmpty ? AppConfig.defaultHistoryDirectory : value
@@ -134,32 +149,62 @@ final class ConfigService: ObservableObject {
                 historyDisplayCount = Int(value) ?? 25
             case "auto_close_after_save":
                 autoCloseAfterSave = value.lowercased() == "true"
+            case "custom_colors":
+                customColors = parseCustomColors(value)
             default:
                 break
             }
         }
-        
+
         return AppConfig(
             historyDirectory: historyDirectory,
             historyDisplayCount: historyDisplayCount,
-            autoCloseAfterSave: autoCloseAfterSave
+            autoCloseAfterSave: autoCloseAfterSave,
+            customColors: customColors
         )
+    }
+
+    /// カスタムカラー配列をパースする
+    private func parseCustomColors(_ value: String) -> [CustomColor] {
+        var colors: [CustomColor] = []
+
+        // 配列形式 ["#FF0000", "#00FF00"] をパース
+        let trimmed = value.trimmingCharacters(in: CharacterSet(charactersIn: "[]"))
+        let colorStrings = trimmed.components(separatedBy: ",")
+
+        for colorString in colorStrings {
+            var hex = colorString.trimmingCharacters(in: .whitespaces)
+            // 引用符を削除
+            if hex.hasPrefix("\"") && hex.hasSuffix("\"") {
+                hex = String(hex.dropFirst().dropLast())
+            }
+            if !hex.isEmpty && hex.hasPrefix("#") {
+                colors.append(CustomColor(hex: hex))
+            }
+        }
+
+        return colors
     }
     
     /// TOMLを生成する
     private func generateToml(_ config: AppConfig) -> String {
-        """
+        let customColorsArray = config.customColors.map { "\"\($0.hex)\"" }.joined(separator: ", ")
+
+        return """
         # Capture and Edit 設定ファイル
         # このファイルは自動生成されます
-        
+
         # 履歴画像の保存場所
         history_directory = "\(config.historyDirectory)"
-        
+
         # 履歴で表示する枚数（25枚以上はパフォーマンスに影響する可能性があります）
         history_display_count = \(config.historyDisplayCount)
-        
+
         # 保存後に自動でウィンドウを閉じる
         auto_close_after_save = \(config.autoCloseAfterSave)
+
+        # カスタムカラーパレット（16進数形式）
+        custom_colors = [\(customColorsArray)]
         """
     }
 }

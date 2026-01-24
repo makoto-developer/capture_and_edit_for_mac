@@ -23,7 +23,11 @@ public struct AboutView: View {
                     Text("バージョン \(viewModel.version)")
                         .font(.body)
                         .foregroundColor(.secondary)
-                    
+
+                    Text("作者: \(viewModel.author)")
+                        .font(.body)
+                        .foregroundColor(.secondary)
+
                     Button(action: {
                         viewModel.openURL(viewModel.licenseURL)
                     }) {

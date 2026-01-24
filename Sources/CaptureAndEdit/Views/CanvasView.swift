@@ -62,7 +62,7 @@ struct CanvasView: NSViewRepresentable {
             }
         }
 
-        func canvasView(_ view: NSCanvasView, mouseDraggedTo point: CGPoint) {
+        func canvasView(_ view: NSCanvasView, mouseDraggedTo point: CGPoint, shiftPressed: Bool) {
             let tool = viewModel.selectedTool
             let color = viewModel.selectedColor
 
@@ -79,7 +79,8 @@ struct CanvasView: NSViewRepresentable {
                 canvasViewModel.handleMouseDragged(
                     to: point,
                     tool: tool,
-                    color: color
+                    color: color,
+                    shiftPressed: shiftPressed
                 )
             }
         }
@@ -106,7 +107,7 @@ struct CanvasView: NSViewRepresentable {
 
 protocol NSCanvasViewDelegate: AnyObject {
     func canvasView(_ view: NSCanvasView, mouseDownAt point: CGPoint)
-    func canvasView(_ view: NSCanvasView, mouseDraggedTo point: CGPoint)
+    func canvasView(_ view: NSCanvasView, mouseDraggedTo point: CGPoint, shiftPressed: Bool)
     func canvasView(_ view: NSCanvasView, mouseUpAt point: CGPoint)
 }
 
@@ -197,7 +198,8 @@ final class NSCanvasView: NSView {
 
     override func mouseDragged(with event: NSEvent) {
         let point = convert(event.locationInWindow, from: nil)
-        delegate?.canvasView(self, mouseDraggedTo: point)
+        let shiftPressed = event.modifierFlags.contains(.shift)
+        delegate?.canvasView(self, mouseDraggedTo: point, shiftPressed: shiftPressed)
         needsDisplay = true
     }
 

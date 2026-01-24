@@ -10,7 +10,7 @@ final class CanvasViewModel: ObservableObject {
     private var dragStartPoint: CGPoint?
     private var isDragging = false
     private var isResizing = false
-    var onTextInputRequested: ((CGPoint, DrawingColor, @escaping (String) -> Void) -> Void)?
+    var onTextInputRequested: ((CGPoint, NSColor, @escaping (String) -> Void) -> Void)?
     var onOperationSelected: ((UUID?) -> Void)?
 
     func handleMouseDown(at point: CGPoint, tool: DrawingTool, operations: [any EditOperation]) {
@@ -57,7 +57,7 @@ final class CanvasViewModel: ObservableObject {
         }
     }
 
-    func handleMouseDragged(to point: CGPoint, tool: DrawingTool, color: DrawingColor) {
+    func handleMouseDragged(to point: CGPoint, tool: DrawingTool, color: NSColor, shiftPressed: Bool = false) {
         guard let start = startPoint else { return }
 
         if tool == .select && (isDragging || isResizing) {
@@ -70,25 +70,34 @@ final class CanvasViewModel: ObservableObject {
             // 選択モードではオブジェクトは作成しない
             break
         case .pen:
-            if let penOp = currentOperation as? PenOperation {
-                currentOperation = penOp.addPoint(point)
-            } else {
-                currentOperation = PenOperation(
-                    points: [start, point],
-                    color: color.nsColor
+            // Shiftキーが押されている場合は直線を描画
+            if shiftPressed {
+                currentOperation = LineOperation(
+                    startPoint: start,
+                    endPoint: point,
+                    color: color
                 )
+            } else {
+                if let penOp = currentOperation as? PenOperation {
+                    currentOperation = penOp.addPoint(point)
+                } else {
+                    currentOperation = PenOperation(
+                        points: [start, point],
+                        color: color
+                    )
+                }
             }
         case .line:
             currentOperation = LineOperation(
                 startPoint: start,
                 endPoint: point,
-                color: color.nsColor
+                color: color
             )
         case .rectangle:
             currentOperation = RectangleOperation(
                 startPoint: start,
                 endPoint: point,
-                color: color.nsColor
+                color: color
             )
         case .pixelate:
             currentOperation = PixelateOperation(
@@ -99,7 +108,7 @@ final class CanvasViewModel: ObservableObject {
             currentOperation = ArrowOperation(
                 startPoint: start,
                 endPoint: point,
-                color: color.nsColor
+                color: color
             )
         case .text:
             // テキストはクリック時に入力ダイアログを表示
@@ -112,7 +121,7 @@ final class CanvasViewModel: ObservableObject {
         return CGPoint(x: currentPoint.x - dragStart.x, y: currentPoint.y - dragStart.y)
     }
 
-    func handleMouseUp(tool: DrawingTool, color: DrawingColor, completion: @escaping (any EditOperation) -> Void) {
+    func handleMouseUp(tool: DrawingTool, color: NSColor, completion: @escaping (any EditOperation) -> Void) {
         print("🖱️ handleMouseUp called with tool: \(tool)")
 
         if tool == .select {
@@ -132,7 +141,7 @@ final class CanvasViewModel: ObservableObject {
                 let operation = TextOperation(
                     position: point,
                     text: text,
-                    color: color.nsColor
+                    color: color
                 )
                 completion(operation)
             }

@@ -16,7 +16,7 @@ struct ToolbarView: View {
                         .font(.system(size: 20))
                 }
                 .buttonStyle(.plain)
-                .help(tool.rawValue)
+                .help(tool.helpText)
             }
 
             Divider()
@@ -35,7 +35,7 @@ struct ToolbarView: View {
                         )
                 }
                 .buttonStyle(.plain)
-                .help(color.rawValue)
+                .help(color.helpText)
             }
 
             Divider()
@@ -47,7 +47,7 @@ struct ToolbarView: View {
             }
             .disabled(!viewModel.document.canUndo)
             .buttonStyle(.plain)
-            .help("Undo (Ctrl+B)")
+            .help("元に戻す (Ctrl+B)")
             .keyboardShortcut("b", modifiers: .control)
 
             Button(action: viewModel.redo) {
@@ -56,7 +56,7 @@ struct ToolbarView: View {
             }
             .disabled(!viewModel.document.canRedo)
             .buttonStyle(.plain)
-            .help("Redo (Ctrl+R)")
+            .help("やり直す (Ctrl+R)")
             .keyboardShortcut("r", modifiers: .control)
 
             Divider()
@@ -67,7 +67,7 @@ struct ToolbarView: View {
                     .font(.system(size: 20))
             }
             .buttonStyle(.plain)
-            .help("Clear All")
+            .help("すべてクリア")
 
             Spacer()
 
@@ -109,7 +109,7 @@ struct ToolbarView: View {
                     .font(.system(size: 20))
             }
             .buttonStyle(.plain)
-            .help("履歴を表示")
+            .help("編集履歴を表示")
 
             Button(action: viewModel.saveToClipboard) {
                 Text("Save to Clipboard")

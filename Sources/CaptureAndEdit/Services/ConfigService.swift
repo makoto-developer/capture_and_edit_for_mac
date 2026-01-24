@@ -11,6 +11,10 @@ final class ConfigService: ObservableObject {
     init() {
         self.config = AppConfig.default
         loadConfig()
+        // 言語設定をLocalizationServiceに反映
+        if let language = AppLanguage(rawValue: config.language) {
+            LocalizationService.shared.setLanguage(language)
+        }
     }
     
     /// 設定をファイルから読み込む
@@ -91,6 +95,14 @@ final class ConfigService: ObservableObject {
         newConfig.customColors.removeAll { $0.id == color.id }
         updateConfig(newConfig)
     }
+
+    /// 言語設定を更新する
+    func updateLanguage(_ language: AppLanguage) {
+        var newConfig = config
+        newConfig.language = language.rawValue
+        updateConfig(newConfig)
+        LocalizationService.shared.setLanguage(language)
+    }
     
     // MARK: - Private Methods
     
@@ -119,6 +131,7 @@ final class ConfigService: ObservableObject {
         var historyDisplayCount = 25
         var autoCloseAfterSave = true
         var customColors: [CustomColor] = []
+        var language = "system"
 
         let lines = content.components(separatedBy: .newlines)
 
@@ -151,6 +164,8 @@ final class ConfigService: ObservableObject {
                 autoCloseAfterSave = value.lowercased() == "true"
             case "custom_colors":
                 customColors = parseCustomColors(value)
+            case "language":
+                language = value.isEmpty ? "system" : value
             default:
                 break
             }
@@ -160,7 +175,8 @@ final class ConfigService: ObservableObject {
             historyDirectory: historyDirectory,
             historyDisplayCount: historyDisplayCount,
             autoCloseAfterSave: autoCloseAfterSave,
-            customColors: customColors
+            customColors: customColors,
+            language: language
         )
     }
 
@@ -205,6 +221,9 @@ final class ConfigService: ObservableObject {
 
         # カスタムカラーパレット（16進数形式）
         custom_colors = [\(customColorsArray)]
+
+        # 言語設定 (system, ja, en)
+        language = "\(config.language)"
         """
     }
 }

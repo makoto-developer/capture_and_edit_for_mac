@@ -28,7 +28,7 @@ struct HistoryView: View {
 
     private var headerView: some View {
         HStack {
-            Text("履歴")
+            Text(L10n.historyTitle)
                 .font(.title2)
                 .fontWeight(.semibold)
 
@@ -38,7 +38,7 @@ struct HistoryView: View {
                 Button(action: {
                     showDeleteAllConfirmation()
                 }) {
-                    Label("全削除", systemImage: "trash")
+                    Label(L10n.historyDeleteAll, systemImage: "trash")
                         .foregroundColor(.red)
                 }
             }
@@ -46,7 +46,7 @@ struct HistoryView: View {
             Button(action: {
                 dismiss()
             }) {
-                Label("閉じる", systemImage: "xmark.circle")
+                Label(L10n.close, systemImage: "xmark.circle")
             }
         }
         .padding()
@@ -72,10 +72,10 @@ struct HistoryView: View {
             Image(systemName: "photo.on.rectangle.angled")
                 .font(.system(size: 64))
                 .foregroundColor(.secondary)
-            Text("履歴がありません")
+            Text(L10n.historyEmpty)
                 .font(.title3)
                 .foregroundColor(.secondary)
-            Text("画像を保存すると、ここに履歴が表示されます")
+            Text(L10n.historyEmptyDescription)
                 .font(.caption)
                 .foregroundColor(.secondary)
             Spacer()
@@ -106,11 +106,11 @@ struct HistoryView: View {
 
     private func showDeleteAllConfirmation() {
         let alert = NSAlert()
-        alert.messageText = "全履歴を削除"
-        alert.informativeText = "すべての履歴を削除してもよろしいですか？この操作は取り消せません。"
+        alert.messageText = L10n.historyDeleteAllTitle
+        alert.informativeText = L10n.historyDeleteAllMessage
         alert.alertStyle = .warning
-        alert.addButton(withTitle: "削除")
-        alert.addButton(withTitle: "キャンセル")
+        alert.addButton(withTitle: L10n.delete)
+        alert.addButton(withTitle: L10n.cancel)
 
         let response = alert.runModal()
         if response == .alertFirstButtonReturn {
@@ -119,8 +119,7 @@ struct HistoryView: View {
     }
 
     private func showCopySuccessNotification() {
-        // 簡易的な通知（将来的にはより洗練された通知に変更可能）
-        print("✅ クリップボードにコピーしました")
+        print("✅ Copied to clipboard")
     }
 }
 
@@ -148,7 +147,7 @@ struct HistoryItemCard: View {
                                 .clipShape(Circle())
                         }
                         .buttonStyle(PlainButtonStyle())
-                        .help("クリップボードにコピー")
+                        .help(L10n.historyCopyToClipboard)
 
                         Button(action: {
                             showDeleteConfirmation()
@@ -161,7 +160,7 @@ struct HistoryItemCard: View {
                                 .clipShape(Circle())
                         }
                         .buttonStyle(PlainButtonStyle())
-                        .help("削除")
+                        .help(L10n.delete)
                     }
                     .padding(8)
                 }
@@ -215,7 +214,7 @@ struct HistoryItemCard: View {
         let formatter = DateFormatter()
         formatter.dateStyle = .short
         formatter.timeStyle = .short
-        formatter.locale = Locale(identifier: "ja_JP")
+        // Use system locale for date formatting
         return formatter.string(from: item.timestamp)
     }
 
@@ -231,11 +230,11 @@ struct HistoryItemCard: View {
 
     private func showDeleteConfirmation() {
         let alert = NSAlert()
-        alert.messageText = "履歴を削除"
-        alert.informativeText = "この履歴を削除してもよろしいですか？"
+        alert.messageText = L10n.historyDeleteTitle
+        alert.informativeText = L10n.historyDeleteMessage
         alert.alertStyle = .warning
-        alert.addButton(withTitle: "削除")
-        alert.addButton(withTitle: "キャンセル")
+        alert.addButton(withTitle: L10n.delete)
+        alert.addButton(withTitle: L10n.cancel)
 
         let response = alert.runModal()
         if response == .alertFirstButtonReturn {
@@ -243,4 +242,3 @@ struct HistoryItemCard: View {
         }
     }
 }
-

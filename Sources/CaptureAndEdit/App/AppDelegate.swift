@@ -81,23 +81,23 @@ public final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegat
         // メニューを作成
         let menu = NSMenu()
 
-        let showWindowItem = NSMenuItem(title: "ウィンドウを表示", action: #selector(showWindow), keyEquivalent: "")
+        let showWindowItem = NSMenuItem(title: L10n.menuShowWindow, action: #selector(showWindow), keyEquivalent: "")
         showWindowItem.image = NSImage(systemSymbolName: "macwindow", accessibilityDescription: nil)
         menu.addItem(showWindowItem)
 
         menu.addItem(NSMenuItem.separator())
 
-        let settingsItem = NSMenuItem(title: "設定...", action: #selector(showSettingsWindow), keyEquivalent: ",")
+        let settingsItem = NSMenuItem(title: L10n.menuSettings, action: #selector(showSettingsWindow), keyEquivalent: ",")
         settingsItem.image = NSImage(systemSymbolName: "gearshape", accessibilityDescription: nil)
         menu.addItem(settingsItem)
 
-        let aboutItem = NSMenuItem(title: "このアプリについて", action: #selector(showAboutWindow), keyEquivalent: "")
+        let aboutItem = NSMenuItem(title: L10n.menuAbout, action: #selector(showAboutWindow), keyEquivalent: "")
         aboutItem.image = NSImage(systemSymbolName: "info.circle", accessibilityDescription: nil)
         menu.addItem(aboutItem)
 
         menu.addItem(NSMenuItem.separator())
 
-        let quitItem = NSMenuItem(title: "終了", action: #selector(quitApp), keyEquivalent: "q")
+        let quitItem = NSMenuItem(title: L10n.menuQuit, action: #selector(quitApp), keyEquivalent: "q")
         quitItem.image = NSImage(systemSymbolName: "power", accessibilityDescription: nil)
         menu.addItem(quitItem)
 
@@ -156,7 +156,7 @@ public final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegat
 
         // このアプリについて
         let aboutItem = NSMenuItem(
-            title: "Capture and Edit について",
+            title: L10n.menuAboutApp,
             action: #selector(showAboutWindow),
             keyEquivalent: ""
         )
@@ -167,7 +167,7 @@ public final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegat
 
         // 設定（Cmd+,）
         let settingsItem = NSMenuItem(
-            title: "設定...",
+            title: L10n.menuSettings,
             action: #selector(showSettingsWindow),
             keyEquivalent: ","
         )
@@ -178,7 +178,7 @@ public final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegat
 
         // 終了（Cmd+Q）
         let quitItem = NSMenuItem(
-            title: "Capture and Edit を終了",
+            title: L10n.menuQuitApp,
             action: #selector(quitApp),
             keyEquivalent: "q"
         )
@@ -194,7 +194,7 @@ public final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegat
 
         // Close Window（Cmd+W）
         let closeWindowItem = NSMenuItem(
-            title: "Close Window",
+            title: L10n.menuCloseWindow,
             action: #selector(closeWindow),
             keyEquivalent: "w"
         )
@@ -210,7 +210,7 @@ public final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegat
 
         // Undo（Cmd+Z）
         let undoItem = NSMenuItem(
-            title: "Undo",
+            title: L10n.menuUndo,
             action: #selector(performUndo),
             keyEquivalent: "z"
         )
@@ -219,7 +219,7 @@ public final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegat
 
         // Redo（Cmd+Shift+Z）
         let redoItem = NSMenuItem(
-            title: "Redo",
+            title: L10n.menuRedo,
             action: #selector(performRedo),
             keyEquivalent: "z"
         )
@@ -231,7 +231,7 @@ public final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegat
 
         // Undo（Ctrl+B）
         let undoCtrlItem = NSMenuItem(
-            title: "Undo (Ctrl+B)",
+            title: "\(L10n.menuUndo) (Ctrl+B)",
             action: #selector(performUndo),
             keyEquivalent: "b"
         )
@@ -241,7 +241,7 @@ public final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegat
 
         // Redo（Ctrl+R）
         let redoCtrlItem = NSMenuItem(
-            title: "Redo (Ctrl+R)",
+            title: "\(L10n.menuRedo) (Ctrl+R)",
             action: #selector(performRedo),
             keyEquivalent: "r"
         )
@@ -297,7 +297,7 @@ public final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegat
             defer: false
         )
 
-        window.title = "設定"
+        window.title = L10n.settingsTitle
         window.contentView = hostingView
         window.center()
         window.isReleasedWhenClosed = false
@@ -333,7 +333,7 @@ public final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegat
             defer: false
         )
 
-        window.title = "Capture and Edit について"
+        window.title = L10n.menuAboutApp
         window.contentView = hostingView
         window.center()
         window.isReleasedWhenClosed = false

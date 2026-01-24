@@ -14,12 +14,16 @@ struct AppConfig: Equatable {
     /// カスタムカラーパレット
     var customColors: [CustomColor]
 
+    /// 言語設定
+    var language: String
+
     /// デフォルト設定
     static let `default` = AppConfig(
         historyDirectory: defaultHistoryDirectory,
         historyDisplayCount: 25,
         autoCloseAfterSave: true,
-        customColors: []
+        customColors: [],
+        language: "system"
     )
     
     /// デフォルトの履歴保存ディレクトリ

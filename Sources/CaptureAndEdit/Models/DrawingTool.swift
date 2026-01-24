@@ -34,19 +34,19 @@ enum DrawingTool: String, CaseIterable, Identifiable {
     var helpText: String {
         switch self {
         case .select:
-            return "選択 - オブジェクトを選択して移動"
+            return L10n.toolSelect
         case .pen:
-            return "ペン - 自由に線を描画（Shiftキーで直線）"
+            return L10n.toolPen
         case .line:
-            return "直線 - 2点間に直線を描画"
+            return L10n.toolLine
         case .rectangle:
-            return "矩形 - 四角形の枠を描画"
+            return L10n.toolRectangle
         case .pixelate:
-            return "塗りつぶし - 領域を黒で塗りつぶし（機密情報のマスキング用）"
+            return L10n.toolPixelate
         case .arrow:
-            return "矢印 - 矢印を描画"
+            return L10n.toolArrow
         case .text:
-            return "テキスト - クリックした位置にテキストを追加"
+            return L10n.toolText
         }
     }
 }
@@ -78,15 +78,15 @@ enum DrawingColor: String, CaseIterable, Identifiable {
     var helpText: String {
         switch self {
         case .red:
-            return "赤"
+            return L10n.colorRed
         case .blue:
-            return "青"
+            return L10n.colorBlue
         case .green:
-            return "緑"
+            return L10n.colorGreen
         case .yellow:
-            return "黄"
+            return L10n.colorYellow
         case .black:
-            return "黒"
+            return L10n.colorBlack
         }
     }
 }

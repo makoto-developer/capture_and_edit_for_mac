@@ -49,7 +49,7 @@ struct MainView: View {
                 } else {
                     VStack {
                         Spacer()
-                        Text("Capture an image to clipboard to start editing")
+                        Text(L10n.mainViewPlaceholder)
                             .foregroundColor(.secondary)
                         Spacer()
                     }
@@ -85,12 +85,12 @@ struct MainView: View {
         NSApp.activate(ignoringOtherApps: true)
 
         let alert = NSAlert()
-        alert.messageText = "テキストを入力"
-        alert.informativeText = "画像に追加するテキストを入力してください"
+        alert.messageText = L10n.textInputTitle
+        alert.informativeText = L10n.textInputMessage
         alert.alertStyle = .informational
 
         let textField = NSTextField(frame: NSRect(x: 0, y: 0, width: 300, height: 32))
-        textField.placeholderString = "テキストを入力してください"
+        textField.placeholderString = L10n.textInputPlaceholder
         textField.isEditable = true
         textField.isSelectable = true
         textField.bezelStyle = .roundedBezel
@@ -102,8 +102,8 @@ struct MainView: View {
         textField.font = NSFont.systemFont(ofSize: 14)
         alert.accessoryView = textField
 
-        alert.addButton(withTitle: "OK")
-        alert.addButton(withTitle: "キャンセル")
+        alert.addButton(withTitle: L10n.ok)
+        alert.addButton(withTitle: L10n.cancel)
 
         DispatchQueue.main.async {
             alert.window.level = .modalPanel

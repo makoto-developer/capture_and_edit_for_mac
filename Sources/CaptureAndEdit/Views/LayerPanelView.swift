@@ -10,7 +10,7 @@ struct LayerPanelView: View {
         VStack(spacing: 0) {
             // Header
             HStack {
-                Text("Layers")
+                Text(L10n.layerTitle)
                     .font(.headline)
 
                 Spacer()
@@ -21,7 +21,7 @@ struct LayerPanelView: View {
                     Image(systemName: "plus")
                 }
                 .buttonStyle(.plain)
-                .help("Add Layer")
+                .help(L10n.layerAdd)
 
                 Button(action: {
                     if let activeId = document.activeLayerId {
@@ -32,7 +32,7 @@ struct LayerPanelView: View {
                 }
                 .buttonStyle(.plain)
                 .disabled(document.layers.count <= 1)
-                .help("Delete Layer")
+                .help(L10n.layerDelete)
             }
             .padding(.horizontal, 12)
             .padding(.vertical, 8)
@@ -89,7 +89,7 @@ struct LayerPanelView: View {
             if let activeLayer = document.activeLayer {
                 VStack(alignment: .leading, spacing: 4) {
                     HStack {
-                        Text("Opacity")
+                        Text(L10n.layerOpacity)
                             .font(.caption)
                         Spacer()
                         Text("\(Int(activeLayer.opacity * 100))%")
@@ -115,14 +115,14 @@ struct LayerPanelView: View {
 
             // Action Buttons
             HStack(spacing: 8) {
-                Button("Merge Visible") {
+                Button(L10n.layerMergeVisible) {
                     document.mergeVisibleLayers()
                 }
                 .buttonStyle(.plain)
                 .font(.caption)
                 .disabled(document.layers.filter { $0.isVisible }.count <= 1)
 
-                Button("Flatten") {
+                Button(L10n.layerFlatten) {
                     document.flattenAllLayers()
                 }
                 .buttonStyle(.plain)

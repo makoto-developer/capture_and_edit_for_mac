@@ -11,174 +11,35 @@ struct SettingsView: View {
     @State private var selectedLanguage: AppLanguage = .system
 
     var body: some View {
-        ScrollView {
-            VStack(spacing: 24) {
-                // ヘッダー
-                HStack {
-                    Image(systemName: "gearshape.fill")
-                        .font(.system(size: 32))
-                        .foregroundColor(.blue)
-                    VStack(alignment: .leading) {
-                        Text(L10n.settingsTitle)
-                            .font(.title2)
-                            .fontWeight(.bold)
-                        Text(L10n.settingsDescription)
-                            .font(.caption)
-                            .foregroundColor(.secondary)
-                    }
-                    Spacer()
+        VStack(spacing: 0) {
+            // ヘッダー
+            headerView
+                .padding(.horizontal, 24)
+                .padding(.top, 20)
+                .padding(.bottom, 16)
+
+            Divider()
+                .padding(.horizontal, 16)
+
+            // コンテンツ
+            ScrollView {
+                VStack(spacing: 20) {
+                    // 言語設定
+                    languageSection
+
+                    // 動作設定
+                    behaviorSection
+
+                    // 保存場所設定
+                    storageSection
+
+                    // 履歴表示枚数設定
+                    historyCountSection
                 }
-                .padding(.bottom, 8)
-
-                // 言語設定
-                SettingsSection(
-                    title: L10n.settingsLanguage,
-                    icon: "globe",
-                    iconColor: .purple
-                ) {
-                    VStack(alignment: .leading, spacing: 12) {
-                        SettingsRow(icon: "character.bubble", iconColor: .purple) {
-                            Picker("", selection: $selectedLanguage) {
-                                ForEach(AppLanguage.allCases) { language in
-                                    Text(language.displayName).tag(language)
-                                }
-                            }
-                            .pickerStyle(.segmented)
-                            .onChange(of: selectedLanguage) { newValue in
-                                configService.updateLanguage(newValue)
-                            }
-                        }
-
-                        HStack(spacing: 4) {
-                            Image(systemName: "info.circle")
-                                .font(.caption)
-                            Text(L10n.settingsLanguageDescription)
-                                .font(.caption)
-                        }
-                        .foregroundColor(.secondary)
-                    }
-                }
-
-                // 動作設定
-                SettingsSection(
-                    title: L10n.settingsBehavior,
-                    icon: "play.circle.fill",
-                    iconColor: .green
-                ) {
-                    SettingsRow(icon: "xmark.circle", iconColor: .orange) {
-                        Toggle(L10n.settingsAutoClose, isOn: Binding(
-                            get: { configService.config.autoCloseAfterSave },
-                            set: { configService.updateAutoCloseAfterSave($0) }
-                        ))
-                    }
-                    Text(L10n.settingsAutoCloseDescription)
-                        .font(.caption)
-                        .foregroundColor(.secondary)
-                        .padding(.leading, 28)
-                }
-
-                // 保存場所設定
-                SettingsSection(
-                    title: L10n.settingsHistoryLocation,
-                    icon: "folder.fill",
-                    iconColor: .blue
-                ) {
-                    VStack(alignment: .leading, spacing: 12) {
-                        SettingsRow(icon: "doc.badge.gearshape", iconColor: .gray) {
-                            HStack {
-                                TextField(L10n.settingsSaveLocation, text: $historyDirectory)
-                                    .textFieldStyle(.roundedBorder)
-
-                                Button(action: { showDirectoryPicker = true }) {
-                                    Label(L10n.settingsSelect, systemImage: "folder.badge.plus")
-                                }
-                            }
-                        }
-
-                        HStack {
-                            Button(action: {
-                                historyDirectory = AppConfig.defaultHistoryDirectory
-                                configService.updateHistoryDirectory(historyDirectory)
-                            }) {
-                                Label(L10n.settingsResetToDefault, systemImage: "arrow.counterclockwise")
-                                    .font(.caption)
-                            }
-                            .buttonStyle(.bordered)
-
-                            Spacer()
-
-                            Button(action: {
-                                configService.updateHistoryDirectory(historyDirectory)
-                            }) {
-                                Label(L10n.save, systemImage: "checkmark.circle.fill")
-                            }
-                            .buttonStyle(.borderedProminent)
-                        }
-
-                        HStack(spacing: 4) {
-                            Image(systemName: "info.circle")
-                                .font(.caption)
-                            Text(L10n.settingsDefaultLocation)
-                                .font(.caption)
-                        }
-                        .foregroundColor(.secondary)
-                    }
-                }
-
-                // 履歴表示枚数設定
-                SettingsSection(
-                    title: L10n.settingsHistoryCount,
-                    icon: "photo.stack.fill",
-                    iconColor: .purple
-                ) {
-                    VStack(alignment: .leading, spacing: 12) {
-                        SettingsRow(icon: "number", iconColor: .indigo) {
-                            HStack {
-                                Text(L10n.settingsDisplayCount)
-                                TextField("", value: $historyDisplayCount, formatter: NumberFormatter())
-                                    .textFieldStyle(.roundedBorder)
-                                    .frame(width: 80)
-                                Text(L10n.settingsItems)
-
-                                Spacer()
-
-                                Button(action: {
-                                    configService.updateHistoryDisplayCount(historyDisplayCount)
-                                }) {
-                                    Label(L10n.save, systemImage: "checkmark.circle.fill")
-                                }
-                                .buttonStyle(.borderedProminent)
-                            }
-                        }
-
-                        if historyDisplayCount > AppConfig.recommendedMaxHistoryCount {
-                            HStack(spacing: 6) {
-                                Image(systemName: "exclamationmark.triangle.fill")
-                                    .foregroundColor(.orange)
-                                Text(String(format: L10n.settingsPerformanceWarning, AppConfig.recommendedMaxHistoryCount))
-                                    .font(.caption)
-                                    .foregroundColor(.orange)
-                            }
-                            .padding(8)
-                            .background(Color.orange.opacity(0.1))
-                            .cornerRadius(6)
-                        }
-
-                        HStack(spacing: 4) {
-                            Image(systemName: "info.circle")
-                                .font(.caption)
-                            Text(L10n.settingsDefaultCount)
-                                .font(.caption)
-                        }
-                        .foregroundColor(.secondary)
-                    }
-                }
-
-                Spacer()
+                .padding(24)
             }
-            .padding(24)
         }
-        .frame(width: 520, height: 550)
+        .frame(width: 500, height: 580)
         .background(Color(nsColor: .windowBackgroundColor))
         .onAppear {
             historyDirectory = configService.config.historyDirectory
@@ -201,48 +62,271 @@ struct SettingsView: View {
             }
         }
     }
-}
 
-// セクションコンポーネント
-private struct SettingsSection<Content: View>: View {
-    let title: String
-    let icon: String
-    let iconColor: Color
-    @ViewBuilder let content: () -> Content
+    // MARK: - Header
 
-    var body: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            HStack(spacing: 8) {
-                Image(systemName: icon)
-                    .font(.system(size: 16))
-                    .foregroundColor(iconColor)
-                Text(title)
-                    .font(.headline)
+    private var headerView: some View {
+        HStack(spacing: 14) {
+            ZStack {
+                RoundedRectangle(cornerRadius: 12)
+                    .fill(LinearGradient(
+                        colors: [Color.blue, Color.blue.opacity(0.7)],
+                        startPoint: .topLeading,
+                        endPoint: .bottomTrailing
+                    ))
+                    .frame(width: 48, height: 48)
+
+                Image(systemName: "gearshape.fill")
+                    .font(.system(size: 24))
+                    .foregroundColor(.white)
             }
 
-            VStack(alignment: .leading, spacing: 8) {
-                content()
+            VStack(alignment: .leading, spacing: 4) {
+                Text(L10n.settingsTitle)
+                    .font(.title2)
+                    .fontWeight(.bold)
+                Text(L10n.settingsDescription)
+                    .font(.subheadline)
+                    .foregroundColor(.secondary)
             }
-            .padding(16)
-            .background(Color(nsColor: .controlBackgroundColor))
-            .cornerRadius(10)
+
+            Spacer()
+        }
+    }
+
+    // MARK: - Language Section
+
+    private var languageSection: some View {
+        SettingsCard {
+            VStack(alignment: .leading, spacing: 16) {
+                SettingsSectionHeader(
+                    icon: "globe",
+                    iconColor: .purple,
+                    title: L10n.settingsLanguage
+                )
+
+                VStack(alignment: .leading, spacing: 10) {
+                    Picker("", selection: $selectedLanguage) {
+                        ForEach(AppLanguage.allCases) { language in
+                            Text(language.displayName).tag(language)
+                        }
+                    }
+                    .pickerStyle(.segmented)
+                    .onChange(of: selectedLanguage) { newValue in
+                        configService.updateLanguage(newValue)
+                    }
+
+                    SettingsHint(text: L10n.settingsLanguageDescription)
+                }
+            }
+        }
+    }
+
+    // MARK: - Behavior Section
+
+    private var behaviorSection: some View {
+        SettingsCard {
+            VStack(alignment: .leading, spacing: 16) {
+                SettingsSectionHeader(
+                    icon: "gearshape.2.fill",
+                    iconColor: .green,
+                    title: L10n.settingsBehavior
+                )
+
+                VStack(alignment: .leading, spacing: 10) {
+                    Toggle(isOn: Binding(
+                        get: { configService.config.autoCloseAfterSave },
+                        set: { configService.updateAutoCloseAfterSave($0) }
+                    )) {
+                        HStack(spacing: 10) {
+                            Image(systemName: "xmark.circle.fill")
+                                .foregroundColor(.orange)
+                                .font(.system(size: 16))
+                            Text(L10n.settingsAutoClose)
+                        }
+                    }
+                    .toggleStyle(.switch)
+
+                    SettingsHint(text: L10n.settingsAutoCloseDescription)
+                }
+            }
+        }
+    }
+
+    // MARK: - Storage Section
+
+    private var storageSection: some View {
+        SettingsCard {
+            VStack(alignment: .leading, spacing: 16) {
+                SettingsSectionHeader(
+                    icon: "folder.fill",
+                    iconColor: .blue,
+                    title: L10n.settingsHistoryLocation
+                )
+
+                VStack(alignment: .leading, spacing: 12) {
+                    HStack(spacing: 8) {
+                        Image(systemName: "doc.badge.gearshape")
+                            .foregroundColor(.gray)
+                            .font(.system(size: 14))
+                            .frame(width: 20)
+
+                        TextField(L10n.settingsSaveLocation, text: $historyDirectory)
+                            .textFieldStyle(.roundedBorder)
+                            .font(.system(size: 12))
+
+                        Button(action: { showDirectoryPicker = true }) {
+                            Image(systemName: "folder.badge.plus")
+                                .font(.system(size: 14))
+                        }
+                        .buttonStyle(.bordered)
+                        .controlSize(.small)
+                    }
+
+                    HStack(spacing: 8) {
+                        Button(action: {
+                            historyDirectory = AppConfig.defaultHistoryDirectory
+                            configService.updateHistoryDirectory(historyDirectory)
+                        }) {
+                            Label(L10n.settingsResetToDefault, systemImage: "arrow.counterclockwise")
+                                .font(.system(size: 11))
+                        }
+                        .buttonStyle(.bordered)
+                        .controlSize(.small)
+
+                        Spacer()
+
+                        Button(action: {
+                            configService.updateHistoryDirectory(historyDirectory)
+                        }) {
+                            Label(L10n.save, systemImage: "checkmark.circle.fill")
+                                .font(.system(size: 11))
+                        }
+                        .buttonStyle(.borderedProminent)
+                        .controlSize(.small)
+                    }
+
+                    SettingsHint(text: L10n.settingsDefaultLocation)
+                }
+            }
+        }
+    }
+
+    // MARK: - History Count Section
+
+    private var historyCountSection: some View {
+        SettingsCard {
+            VStack(alignment: .leading, spacing: 16) {
+                SettingsSectionHeader(
+                    icon: "photo.stack.fill",
+                    iconColor: .indigo,
+                    title: L10n.settingsHistoryCount
+                )
+
+                VStack(alignment: .leading, spacing: 12) {
+                    HStack(spacing: 12) {
+                        Image(systemName: "number")
+                            .foregroundColor(.indigo)
+                            .font(.system(size: 14))
+                            .frame(width: 20)
+
+                        Text(L10n.settingsDisplayCount)
+                            .font(.system(size: 13))
+
+                        TextField("", value: $historyDisplayCount, formatter: NumberFormatter())
+                            .textFieldStyle(.roundedBorder)
+                            .frame(width: 60)
+                            .font(.system(size: 12))
+
+                        Text(L10n.settingsItems)
+                            .font(.system(size: 13))
+                            .foregroundColor(.secondary)
+
+                        Spacer()
+
+                        Button(action: {
+                            configService.updateHistoryDisplayCount(historyDisplayCount)
+                        }) {
+                            Label(L10n.save, systemImage: "checkmark.circle.fill")
+                                .font(.system(size: 11))
+                        }
+                        .buttonStyle(.borderedProminent)
+                        .controlSize(.small)
+                    }
+
+                    if historyDisplayCount > AppConfig.recommendedMaxHistoryCount {
+                        HStack(spacing: 8) {
+                            Image(systemName: "exclamationmark.triangle.fill")
+                                .foregroundColor(.orange)
+                                .font(.system(size: 12))
+                            Text(String(format: L10n.settingsPerformanceWarning, AppConfig.recommendedMaxHistoryCount))
+                                .font(.system(size: 11))
+                                .foregroundColor(.orange)
+                        }
+                        .padding(10)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .background(Color.orange.opacity(0.1))
+                        .cornerRadius(8)
+                    }
+
+                    SettingsHint(text: L10n.settingsDefaultCount)
+                }
+            }
         }
     }
 }
 
-// 行コンポーネント
-private struct SettingsRow<Content: View>: View {
-    let icon: String
-    let iconColor: Color
+// MARK: - Components
+
+private struct SettingsCard<Content: View>: View {
     @ViewBuilder let content: () -> Content
 
     var body: some View {
-        HStack(spacing: 8) {
-            Image(systemName: icon)
-                .font(.system(size: 14))
-                .foregroundColor(iconColor)
-                .frame(width: 20)
-            content()
+        content()
+            .padding(16)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .background(Color(nsColor: .controlBackgroundColor))
+            .cornerRadius(12)
+            .overlay(
+                RoundedRectangle(cornerRadius: 12)
+                    .stroke(Color(nsColor: .separatorColor).opacity(0.5), lineWidth: 1)
+            )
+    }
+}
+
+private struct SettingsSectionHeader: View {
+    let icon: String
+    let iconColor: Color
+    let title: String
+
+    var body: some View {
+        HStack(spacing: 10) {
+            ZStack {
+                RoundedRectangle(cornerRadius: 6)
+                    .fill(iconColor.opacity(0.15))
+                    .frame(width: 28, height: 28)
+
+                Image(systemName: icon)
+                    .font(.system(size: 14, weight: .semibold))
+                    .foregroundColor(iconColor)
+            }
+
+            Text(title)
+                .font(.system(size: 14, weight: .semibold))
         }
+    }
+}
+
+private struct SettingsHint: View {
+    let text: String
+
+    var body: some View {
+        HStack(spacing: 6) {
+            Image(systemName: "info.circle")
+                .font(.system(size: 11))
+            Text(text)
+                .font(.system(size: 11))
+        }
+        .foregroundColor(.secondary)
     }
 }

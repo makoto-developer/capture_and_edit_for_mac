@@ -12,6 +12,8 @@ struct LayerPanelView: View {
             HStack {
                 Text(L10n.layerTitle)
                     .font(.headline)
+                    .lineLimit(1)
+                    .fixedSize(horizontal: true, vertical: false)
 
                 Spacer()
 
@@ -91,10 +93,13 @@ struct LayerPanelView: View {
                     HStack {
                         Text(L10n.layerOpacity)
                             .font(.caption)
+                            .lineLimit(1)
                         Spacer()
                         Text("\(Int(activeLayer.opacity * 100))%")
                             .font(.caption)
                             .foregroundColor(.secondary)
+                            .lineLimit(1)
+                            .fixedSize(horizontal: true, vertical: false)
                     }
 
                     Slider(
@@ -115,15 +120,23 @@ struct LayerPanelView: View {
 
             // Action Buttons
             HStack(spacing: 8) {
-                Button(L10n.layerMergeVisible) {
+                Button {
                     document.mergeVisibleLayers()
+                } label: {
+                    Text(L10n.layerMergeVisible)
+                        .lineLimit(1)
+                        .fixedSize(horizontal: true, vertical: false)
                 }
                 .buttonStyle(.plain)
                 .font(.caption)
                 .disabled(document.layers.filter { $0.isVisible }.count <= 1)
 
-                Button(L10n.layerFlatten) {
+                Button {
                     document.flattenAllLayers()
+                } label: {
+                    Text(L10n.layerFlatten)
+                        .lineLimit(1)
+                        .fixedSize(horizontal: true, vertical: false)
                 }
                 .buttonStyle(.plain)
                 .font(.caption)

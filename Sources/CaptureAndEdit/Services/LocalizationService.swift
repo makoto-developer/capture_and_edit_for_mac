@@ -107,6 +107,9 @@ enum L10n {
     static var toolbarLayerPanel: String { localized("Show/Hide Layer Panel", ja: "レイヤーパネルを表示/非表示") }
     static var toolbarResetZoom: String { localized("Reset zoom to 100%", ja: "拡大率を100%にリセット") }
     static var toolbarAddCustomColor: String { localized("Add Custom Color", ja: "カスタムカラーを追加") }
+    static var toolbarCustomColors: String { localized("Custom Colors", ja: "カスタムカラー") }
+    static var toolbarNoCustomColors: String { localized("No custom colors yet", ja: "カスタムカラーがありません") }
+    static var toolbarAddColor: String { localized("Add Color", ja: "色を追加") }
 
     // MARK: - Drawing Tools
     static var toolSelect: String { localized("Select - Select and move objects", ja: "選択 - オブジェクトを選択して移動") }

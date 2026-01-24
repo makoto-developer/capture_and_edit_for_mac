@@ -46,3 +46,6 @@ CaptureAndEdit.app/
 # AI
 .serena
 
+# Task
+task*.md
+

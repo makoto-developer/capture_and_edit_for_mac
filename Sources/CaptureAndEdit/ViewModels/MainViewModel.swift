@@ -5,7 +5,8 @@ import SwiftUI
 final class MainViewModel: ObservableObject {
     @Published var document = ImageDocument()
     @Published var selectedTool: DrawingTool = .line
-    @Published var selectedColor: DrawingColor = .red
+    @Published var selectedPresetColor: DrawingColor = .red
+    @Published var selectedCustomColorId: UUID?
     @Published var zoomScale: CGFloat = 1.0
 
     let clipboardMonitor = ClipboardMonitor()
@@ -15,6 +16,36 @@ final class MainViewModel: ObservableObject {
     /// 保存後に自動終了するかどうか（ConfigServiceから取得）
     var autoCloseAfterSave: Bool {
         ConfigService.shared.config.autoCloseAfterSave
+    }
+
+    /// 現在選択中の色（NSColor）
+    var selectedColor: NSColor {
+        if let customColorId = selectedCustomColorId,
+           let customColor = ConfigService.shared.config.customColors.first(where: { $0.id == customColorId }) {
+            return customColor.nsColor
+        }
+        return selectedPresetColor.nsColor
+    }
+
+    /// プリセットカラーを選択
+    func selectPresetColor(_ color: DrawingColor) {
+        selectedPresetColor = color
+        selectedCustomColorId = nil
+    }
+
+    /// カスタムカラーを選択
+    func selectCustomColor(_ color: CustomColor) {
+        selectedCustomColorId = color.id
+    }
+
+    /// プリセットカラーが選択されているか
+    func isPresetColorSelected(_ color: DrawingColor) -> Bool {
+        selectedCustomColorId == nil && selectedPresetColor == color
+    }
+
+    /// カスタムカラーが選択されているか
+    func isCustomColorSelected(_ color: CustomColor) -> Bool {
+        selectedCustomColorId == color.id
     }
 
     // Zoom constraints

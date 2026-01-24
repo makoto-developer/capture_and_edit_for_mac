@@ -4,18 +4,22 @@ import Foundation
 struct AppConfig: Equatable {
     /// 履歴画像の保存場所
     var historyDirectory: String
-    
+
     /// 履歴で表示する枚数
     var historyDisplayCount: Int
-    
+
     /// 保存後に自動で閉じる
     var autoCloseAfterSave: Bool
-    
+
+    /// カスタムカラーパレット
+    var customColors: [CustomColor]
+
     /// デフォルト設定
     static let `default` = AppConfig(
         historyDirectory: defaultHistoryDirectory,
         historyDisplayCount: 25,
-        autoCloseAfterSave: true
+        autoCloseAfterSave: true,
+        customColors: []
     )
     
     /// デフォルトの履歴保存ディレクトリ

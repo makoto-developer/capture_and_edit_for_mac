@@ -81,12 +81,25 @@ public final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegat
         // メニューを作成
         let menu = NSMenu()
 
-        menu.addItem(NSMenuItem(title: "ウィンドウを表示", action: #selector(showWindow), keyEquivalent: ""))
+        let showWindowItem = NSMenuItem(title: "ウィンドウを表示", action: #selector(showWindow), keyEquivalent: "")
+        showWindowItem.image = NSImage(systemSymbolName: "macwindow", accessibilityDescription: nil)
+        menu.addItem(showWindowItem)
+
         menu.addItem(NSMenuItem.separator())
-        menu.addItem(NSMenuItem(title: "設定...", action: #selector(showSettingsWindow), keyEquivalent: ","))
-        menu.addItem(NSMenuItem(title: "このアプリについて", action: #selector(showAboutWindow), keyEquivalent: ""))
+
+        let settingsItem = NSMenuItem(title: "設定...", action: #selector(showSettingsWindow), keyEquivalent: ",")
+        settingsItem.image = NSImage(systemSymbolName: "gearshape", accessibilityDescription: nil)
+        menu.addItem(settingsItem)
+
+        let aboutItem = NSMenuItem(title: "このアプリについて", action: #selector(showAboutWindow), keyEquivalent: "")
+        aboutItem.image = NSImage(systemSymbolName: "info.circle", accessibilityDescription: nil)
+        menu.addItem(aboutItem)
+
         menu.addItem(NSMenuItem.separator())
-        menu.addItem(NSMenuItem(title: "終了", action: #selector(quitApp), keyEquivalent: "q"))
+
+        let quitItem = NSMenuItem(title: "終了", action: #selector(quitApp), keyEquivalent: "q")
+        quitItem.image = NSImage(systemSymbolName: "power", accessibilityDescription: nil)
+        menu.addItem(quitItem)
 
         statusItem?.menu = menu
     }
@@ -278,7 +291,7 @@ public final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegat
         let hostingView = NSHostingView(rootView: settingsView)
 
         let window = NSWindow(
-            contentRect: NSRect(x: 0, y: 0, width: 500, height: 400),
+            contentRect: NSRect(x: 0, y: 0, width: 520, height: 480),
             styleMask: [.titled, .closable],
             backing: .buffered,
             defer: false

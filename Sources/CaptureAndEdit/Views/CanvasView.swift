@@ -128,6 +128,13 @@ final class NSCanvasView: NSView {
         fatalError("init(coder:) has not been implemented")
     }
 
+    // First Responder対応（キーイベントを受け取るため）
+    override var acceptsFirstResponder: Bool { true }
+
+    override func becomeFirstResponder() -> Bool {
+        return true
+    }
+
     override func draw(_ dirtyRect: NSRect) {
         super.draw(dirtyRect)
 
@@ -192,6 +199,9 @@ final class NSCanvasView: NSView {
     }
 
     override func mouseDown(with event: NSEvent) {
+        // First Responderになる
+        window?.makeFirstResponder(self)
+
         let point = convert(event.locationInWindow, from: nil)
         delegate?.canvasView(self, mouseDownAt: point)
     }
@@ -199,6 +209,7 @@ final class NSCanvasView: NSView {
     override func mouseDragged(with event: NSEvent) {
         let point = convert(event.locationInWindow, from: nil)
         let shiftPressed = event.modifierFlags.contains(.shift)
+        print("🎨 mouseDragged: point=\(point), shiftPressed=\(shiftPressed)")
         delegate?.canvasView(self, mouseDraggedTo: point, shiftPressed: shiftPressed)
         needsDisplay = true
     }

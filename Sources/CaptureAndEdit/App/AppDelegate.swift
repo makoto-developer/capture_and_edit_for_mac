@@ -324,7 +324,7 @@ public final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegat
         window.contentView = hostingView
         window.center()
         window.isReleasedWhenClosed = false
-        window.level = .floating
+        // 最前列にしない（通常のウィンドウレベル）
 
         aboutWindow = window
 

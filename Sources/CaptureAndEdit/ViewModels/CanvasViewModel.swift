@@ -57,7 +57,7 @@ final class CanvasViewModel: ObservableObject {
         }
     }
 
-    func handleMouseDragged(to point: CGPoint, tool: DrawingTool, color: DrawingColor) {
+    func handleMouseDragged(to point: CGPoint, tool: DrawingTool, color: DrawingColor, shiftPressed: Bool = false) {
         guard let start = startPoint else { return }
 
         if tool == .select && (isDragging || isResizing) {
@@ -70,13 +70,22 @@ final class CanvasViewModel: ObservableObject {
             // 選択モードではオブジェクトは作成しない
             break
         case .pen:
-            if let penOp = currentOperation as? PenOperation {
-                currentOperation = penOp.addPoint(point)
-            } else {
-                currentOperation = PenOperation(
-                    points: [start, point],
+            // Shiftキーが押されている場合は直線を描画
+            if shiftPressed {
+                currentOperation = LineOperation(
+                    startPoint: start,
+                    endPoint: point,
                     color: color.nsColor
                 )
+            } else {
+                if let penOp = currentOperation as? PenOperation {
+                    currentOperation = penOp.addPoint(point)
+                } else {
+                    currentOperation = PenOperation(
+                        points: [start, point],
+                        color: color.nsColor
+                    )
+                }
             }
         case .line:
             currentOperation = LineOperation(

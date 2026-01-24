@@ -10,44 +10,44 @@ enum HistoryServiceError: Error {
 }
 
 final class HistoryService {
-    private let historyDirectory: URL
+    private var historyDirectory: URL {
+        URL(fileURLWithPath: ConfigService.shared.config.historyDirectory)
+    }
+    
+    private var maxDisplayCount: Int {
+        ConfigService.shared.config.historyDisplayCount
+    }
+    
     private let fileManager = FileManager.default
 
-    init(historyDirectory: URL? = nil) {
-        // ディレクトリパスを決定
-        let directory: URL
-        if let customDirectory = historyDirectory {
-            directory = customDirectory
-        } else {
-            // デフォルトはホームディレクトリ直下
-            let homeDirectory = fileManager.homeDirectoryForCurrentUser
-            directory = homeDirectory.appendingPathComponent("CaptureAndEdit_history")
-        }
-
-        self.historyDirectory = directory
-        print("📁 HistoryService initialized. Directory: \(self.historyDirectory.path)")
+    init() {
+        print("📁 HistoryService initialized. Directory: \(historyDirectory.path)")
         createHistoryDirectoryIfNeeded()
     }
 
     private func createHistoryDirectoryIfNeeded() {
-        guard !fileManager.fileExists(atPath: historyDirectory.path) else {
-            print("✅ History directory already exists: \(historyDirectory.path)")
+        let directory = historyDirectory
+        guard !fileManager.fileExists(atPath: directory.path) else {
+            print("✅ History directory already exists: \(directory.path)")
             return
         }
 
         do {
             try fileManager.createDirectory(
-                at: historyDirectory,
+                at: directory,
                 withIntermediateDirectories: true,
                 attributes: nil
             )
-            print("✅ History directory created: \(historyDirectory.path)")
+            print("✅ History directory created: \(directory.path)")
         } catch {
             print("❌ Failed to create history directory: \(error)")
         }
     }
 
     func saveImage(_ image: NSImage, timestamp: Date) throws -> HistoryItem {
+        // 保存前にディレクトリを確認・作成
+        createHistoryDirectoryIfNeeded()
+        
         guard let tiffData = image.tiffRepresentation,
               let bitmapImage = NSBitmapImageRep(data: tiffData),
               let pngData = bitmapImage.representation(using: .png, properties: [:]) else {
@@ -67,12 +67,13 @@ final class HistoryService {
     }
 
     func loadHistory() throws -> [HistoryItem] {
-        guard fileManager.fileExists(atPath: historyDirectory.path) else {
+        let directory = historyDirectory
+        guard fileManager.fileExists(atPath: directory.path) else {
             return []
         }
 
         let fileURLs = try fileManager.contentsOfDirectory(
-            at: historyDirectory,
+            at: directory,
             includingPropertiesForKeys: [.creationDateKey],
             options: [.skipsHiddenFiles]
         )
@@ -91,7 +92,7 @@ final class HistoryService {
                 )
             }
             .sorted(by: >) // 新しい順
-            .prefix(25) // 最大25件まで表示（ファイルは削除しない）
+            .prefix(maxDisplayCount) // 設定に基づいた表示枚数
 
         return Array(items)
     }

@@ -6,12 +6,16 @@ final class MainViewModel: ObservableObject {
     @Published var document = ImageDocument()
     @Published var selectedTool: DrawingTool = .line
     @Published var selectedColor: DrawingColor = .red
-    @Published var autoCloseAfterSave: Bool = false
     @Published var zoomScale: CGFloat = 1.0
 
     let clipboardMonitor = ClipboardMonitor()
     let historyService = HistoryService()
     var window: (() -> NSWindow?)?
+
+    /// 保存後に自動終了するかどうか（ConfigServiceから取得）
+    var autoCloseAfterSave: Bool {
+        ConfigService.shared.config.autoCloseAfterSave
+    }
 
     // Zoom constraints
     private let minZoomScale: CGFloat = 0.5  // 50%

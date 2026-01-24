@@ -2,8 +2,10 @@ import SwiftUI
 
 struct ToolbarView: View {
     @ObservedObject var viewModel: MainViewModel
+    @ObservedObject var configService = ConfigService.shared
     @Binding var showHistory: Bool
     @Binding var showLayerPanel: Bool
+    @State private var newColor: Color = .red
 
     var body: some View {
         HStack(spacing: 16) {
@@ -22,21 +24,58 @@ struct ToolbarView: View {
             Divider()
                 .frame(height: 20)
 
+            // プリセットカラー
             ForEach(DrawingColor.allCases) { color in
                 Button(action: {
-                    viewModel.selectedColor = color
+                    viewModel.selectPresetColor(color)
                 }) {
                     Circle()
                         .fill(Color(nsColor: color.nsColor))
                         .frame(width: 24, height: 24)
                         .overlay(
                             Circle()
-                                .stroke(viewModel.selectedColor == color ? Color.blue : Color.clear, lineWidth: 2)
+                                .stroke(viewModel.isPresetColorSelected(color) ? Color.blue : Color.clear, lineWidth: 2)
                         )
                 }
                 .buttonStyle(.plain)
                 .help(color.helpText)
             }
+
+            // カスタムカラー
+            ForEach(configService.config.customColors) { customColor in
+                Button(action: {
+                    viewModel.selectCustomColor(customColor)
+                }) {
+                    Circle()
+                        .fill(Color(nsColor: customColor.nsColor))
+                        .frame(width: 24, height: 24)
+                        .overlay(
+                            Circle()
+                                .stroke(viewModel.isCustomColorSelected(customColor) ? Color.blue : Color.clear, lineWidth: 2)
+                        )
+                }
+                .buttonStyle(.plain)
+                .help(customColor.helpText)
+                .contextMenu {
+                    Button(role: .destructive) {
+                        configService.removeCustomColor(customColor)
+                    } label: {
+                        Label("削除", systemImage: "trash")
+                    }
+                }
+            }
+
+            // カラー追加ボタン
+            ColorPicker("", selection: $newColor)
+                .labelsHidden()
+                .frame(width: 24, height: 24)
+                .help("カスタムカラーを追加")
+                .onChange(of: newColor) { newValue in
+                    let nsColor = NSColor(newValue)
+                    let customColor = CustomColor(color: nsColor)
+                    configService.addCustomColor(customColor)
+                    viewModel.selectCustomColor(customColor)
+                }
 
             Divider()
                 .frame(height: 20)

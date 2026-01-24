@@ -1,4 +1,5 @@
 import SwiftUI
+import AppKit
 
 struct MainView: View {
     @EnvironmentObject var viewModel: MainViewModel
@@ -80,7 +81,7 @@ struct MainView: View {
         }
     }
 
-    private func showTextInputAlert(color: DrawingColor, completion: @escaping (String) -> Void) {
+    private func showTextInputAlert(color: NSColor, completion: @escaping (String) -> Void) {
         NSApp.activate(ignoringOtherApps: true)
 
         let alert = NSAlert()

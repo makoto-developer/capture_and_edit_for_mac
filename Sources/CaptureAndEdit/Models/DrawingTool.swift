@@ -23,11 +23,31 @@ enum DrawingTool: String, CaseIterable, Identifiable {
         case .rectangle:
             return "rectangle"
         case .pixelate:
-            return "square.grid.3x3.fill"
+            return "rectangle.inset.filled"  // 塗りつぶしを直感的に表すアイコン
         case .arrow:
             return "arrow.up.right"
         case .text:
             return "textformat"
+        }
+    }
+
+    /// 日本語のツールチップ
+    var helpText: String {
+        switch self {
+        case .select:
+            return "選択 - オブジェクトを選択して移動"
+        case .pen:
+            return "ペン - 自由に線を描画"
+        case .line:
+            return "直線 - 直線を描画"
+        case .rectangle:
+            return "枠 - 四角形の枠を描画"
+        case .pixelate:
+            return "塗りつぶし - 領域を黒で塗りつぶし（機密情報のマスキング用）"
+        case .arrow:
+            return "矢印 - 矢印を描画"
+        case .text:
+            return "テキスト - 文字を追加"
         }
     }
 }
@@ -53,6 +73,22 @@ enum DrawingColor: String, CaseIterable, Identifiable {
             return .systemYellow
         case .black:
             return .black
+        }
+    }
+
+    /// 日本語のツールチップ
+    var helpText: String {
+        switch self {
+        case .red:
+            return "赤"
+        case .blue:
+            return "青"
+        case .green:
+            return "緑"
+        case .yellow:
+            return "黄"
+        case .black:
+            return "黒"
         }
     }
 }

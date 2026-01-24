@@ -14,6 +14,10 @@ public final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegat
         NSApp.setActivationPolicy(.regular)
         print("✅ Activation policy set to .regular")
 
+        // 設定を初期化（設定ファイルがなければ作成）
+        _ = ConfigService.shared
+        print("✅ ConfigService initialized")
+
         // ViewModelを作成
         let mainViewModel = MainViewModel()
         viewModel = mainViewModel

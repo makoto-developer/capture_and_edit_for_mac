@@ -60,7 +60,7 @@ struct ToolbarView: View {
                     Button(role: .destructive) {
                         configService.removeCustomColor(customColor)
                     } label: {
-                        Label("削除", systemImage: "trash")
+                        Label(L10n.delete, systemImage: "trash")
                     }
                 }
             }
@@ -69,7 +69,7 @@ struct ToolbarView: View {
             ColorPicker("", selection: $newColor)
                 .labelsHidden()
                 .frame(width: 24, height: 24)
-                .help("カスタムカラーを追加")
+                .help(L10n.toolbarAddCustomColor)
                 .onChange(of: newColor) { newValue in
                     let nsColor = NSColor(newValue)
                     let customColor = CustomColor(color: nsColor)
@@ -86,7 +86,7 @@ struct ToolbarView: View {
             }
             .disabled(!viewModel.document.canUndo)
             .buttonStyle(.plain)
-            .help("元に戻す (Ctrl+B)")
+            .help(L10n.toolbarUndo)
             .keyboardShortcut("b", modifiers: .control)
 
             Button(action: viewModel.redo) {
@@ -95,7 +95,7 @@ struct ToolbarView: View {
             }
             .disabled(!viewModel.document.canRedo)
             .buttonStyle(.plain)
-            .help("やり直す (Ctrl+R)")
+            .help(L10n.toolbarRedo)
             .keyboardShortcut("r", modifiers: .control)
 
             Divider()
@@ -106,7 +106,7 @@ struct ToolbarView: View {
                     .font(.system(size: 20))
             }
             .buttonStyle(.plain)
-            .help("すべてクリア")
+            .help(L10n.toolbarClear)
 
             Spacer()
 
@@ -124,7 +124,7 @@ struct ToolbarView: View {
                     .foregroundColor(viewModel.zoomScale == 1.0 ? .secondary : .blue)
             }
             .buttonStyle(.plain)
-            .help("拡大率を100%にリセット")
+            .help(L10n.toolbarResetZoom)
             .disabled(viewModel.zoomScale == 1.0)
 
             Divider()
@@ -139,7 +139,7 @@ struct ToolbarView: View {
                     .foregroundColor(showLayerPanel ? .blue : .primary)
             }
             .buttonStyle(.plain)
-            .help("レイヤーパネルを表示/非表示")
+            .help(L10n.toolbarLayerPanel)
 
             Button(action: {
                 showHistory = true
@@ -148,10 +148,10 @@ struct ToolbarView: View {
                     .font(.system(size: 20))
             }
             .buttonStyle(.plain)
-            .help("編集履歴を表示")
+            .help(L10n.toolbarHistory)
 
             Button(action: viewModel.saveToClipboard) {
-                Text("Save to Clipboard")
+                Text(L10n.toolbarSaveToClipboard)
                     .font(.system(size: 13))
                     .padding(.horizontal, 12)
                     .padding(.vertical, 6)

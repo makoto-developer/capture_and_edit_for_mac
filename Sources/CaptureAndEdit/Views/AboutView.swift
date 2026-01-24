@@ -3,9 +3,9 @@ import SwiftUI
 public struct AboutView: View {
     @StateObject private var viewModel = AboutViewModel()
     @Environment(\.dismiss) private var dismiss
-    
+
     public init() {}
-    
+
     public var body: some View {
         VStack(spacing: 0) {
             // ヘッダー部分
@@ -14,17 +14,17 @@ public struct AboutView: View {
                 Image(systemName: "photo.on.rectangle.angled")
                     .font(.system(size: 80))
                     .foregroundColor(.blue)
-                
+
                 VStack(alignment: .leading, spacing: 4) {
                     Text(viewModel.appName)
                         .font(.title)
                         .fontWeight(.bold)
-                    
-                    Text("バージョン \(viewModel.version)")
+
+                    Text("\(L10n.aboutVersion) \(viewModel.version)")
                         .font(.body)
                         .foregroundColor(.secondary)
 
-                    Text("作者: \(viewModel.author)")
+                    Text("\(L10n.aboutAuthor) \(viewModel.author)")
                         .font(.body)
                         .foregroundColor(.secondary)
 
@@ -39,26 +39,26 @@ public struct AboutView: View {
                     .buttonStyle(.plain)
                     .cursor(.pointingHand)
                 }
-                
+
                 Spacer()
             }
             .padding(30)
-            
+
             Divider()
-            
+
             // リンク部分
             VStack(alignment: .leading, spacing: 12) {
                 // ソースコードレポジトリ
                 LinkButton(
-                    title: "ソースコードレポジトリ",
+                    title: L10n.aboutSourceCode,
                     systemImage: "chevron.left.forwardslash.chevron.right"
                 ) {
                     viewModel.openURL(viewModel.repositoryURL)
                 }
-                
+
                 // 最新リリース
                 LinkButton(
-                    title: "最新リリース",
+                    title: L10n.aboutLatestRelease,
                     systemImage: "arrow.down.circle"
                 ) {
                     viewModel.openURL(viewModel.latestReleaseURL)
@@ -66,20 +66,20 @@ public struct AboutView: View {
             }
             .padding(.horizontal, 30)
             .padding(.top, 20)
-            
+
             // ボタン部分
             VStack(spacing: 12) {
                 // フィードバック提出
                 ActionButton(
-                    title: "フィードバック提出...",
+                    title: L10n.aboutFeedback,
                     systemImage: "bubble.left.and.bubble.right"
                 ) {
                     viewModel.openURL(viewModel.feedbackURL)
                 }
-                
+
                 // プロジェクトに貢献する
                 ActionButton(
-                    title: "このプロジェクトを支援する",
+                    title: L10n.aboutSupport,
                     systemImage: "heart.fill",
                     iconColor: .red
                 ) {
@@ -88,13 +88,13 @@ public struct AboutView: View {
             }
             .padding(.horizontal, 30)
             .padding(.vertical, 20)
-            
+
             Divider()
-            
+
             // 終了ボタン
             HStack {
                 Spacer()
-                Button("終了") {
+                Button(L10n.close) {
                     dismiss()
                 }
                 .keyboardShortcut(.defaultAction)
@@ -110,7 +110,7 @@ private struct LinkButton: View {
     let title: String
     let systemImage: String
     let action: () -> Void
-    
+
     var body: some View {
         Button(action: action) {
             HStack(spacing: 6) {
@@ -133,7 +133,7 @@ private struct ActionButton: View {
     let systemImage: String
     var iconColor: Color = .primary
     let action: () -> Void
-    
+
     var body: some View {
         Button(action: action) {
             HStack {
@@ -162,5 +162,3 @@ extension View {
         }
     }
 }
-
-

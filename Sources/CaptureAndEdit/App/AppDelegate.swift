@@ -6,6 +6,7 @@ public final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegat
     private var viewModel: MainViewModel?
     private var statusItem: NSStatusItem?
     private var aboutWindow: NSWindow?
+    private var settingsWindow: NSWindow?
 
     public func applicationDidFinishLaunching(_ notification: Notification) {
         // 🔑 重要: アプリを通常のフォアグラウンドアプリとして設定
@@ -78,6 +79,7 @@ public final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegat
 
         menu.addItem(NSMenuItem(title: "ウィンドウを表示", action: #selector(showWindow), keyEquivalent: ""))
         menu.addItem(NSMenuItem.separator())
+        menu.addItem(NSMenuItem(title: "設定...", action: #selector(showSettingsWindow), keyEquivalent: ","))
         menu.addItem(NSMenuItem(title: "このアプリについて", action: #selector(showAboutWindow), keyEquivalent: ""))
         menu.addItem(NSMenuItem.separator())
         menu.addItem(NSMenuItem(title: "終了", action: #selector(quitApp), keyEquivalent: "q"))
@@ -143,6 +145,17 @@ public final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegat
         )
         aboutItem.target = self
         appMenu.addItem(aboutItem)
+
+        appMenu.addItem(NSMenuItem.separator())
+
+        // 設定（Cmd+,）
+        let settingsItem = NSMenuItem(
+            title: "設定...",
+            action: #selector(showSettingsWindow),
+            keyEquivalent: ","
+        )
+        settingsItem.target = self
+        appMenu.addItem(settingsItem)
 
         appMenu.addItem(NSMenuItem.separator())
 
@@ -238,6 +251,47 @@ public final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegat
     @objc private func closeWindow() {
         print("🔒 Close Window triggered via Cmd+W")
         window?.orderOut(nil)
+    }
+
+    @objc private func showSettingsWindow() {
+        print("⚙️ Show Settings Window triggered")
+
+        // 既存のウィンドウがあれば再利用
+        if let existingWindow = settingsWindow {
+            existingWindow.orderFront(nil)
+            existingWindow.makeKeyAndOrderFront(nil)
+            NSApp.activate(ignoringOtherApps: true)
+            return
+        }
+
+        // 新しい設定ウィンドウを作成
+        guard let viewModel = viewModel else {
+            print("❌ ViewModel not available")
+            return
+        }
+
+        let settingsView = SettingsView(viewModel: viewModel)
+        let hostingView = NSHostingView(rootView: settingsView)
+
+        let window = NSWindow(
+            contentRect: NSRect(x: 0, y: 0, width: 500, height: 400),
+            styleMask: [.titled, .closable],
+            backing: .buffered,
+            defer: false
+        )
+
+        window.title = "設定"
+        window.contentView = hostingView
+        window.center()
+        window.isReleasedWhenClosed = false
+
+        settingsWindow = window
+
+        window.orderFront(nil)
+        window.makeKeyAndOrderFront(nil)
+        NSApp.activate(ignoringOtherApps: true)
+
+        print("✅ Settings Window displayed")
     }
 
     @objc private func showAboutWindow() {
